@@ -16,6 +16,8 @@ public class ProductServiceImpl implements ProductService {
         product.setName("Apple" + productId);
         product.setNum(2);
 
+        System.out.println("Return product by this client");
+
         return product;
     }
 

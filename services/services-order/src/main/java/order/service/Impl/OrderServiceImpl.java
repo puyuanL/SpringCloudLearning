@@ -2,6 +2,7 @@ package order.service.Impl;
 
 import lombok.extern.slf4j.Slf4j;
 import order.bean.Order;
+import order.feign.ProductFeignClient;
 import order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
@@ -26,11 +27,18 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     LoadBalancerClient loadBalancerClient;
 
+    @Autowired
+    ProductFeignClient productFeignClient;
+
     @Override
     public Order createOrder(Long productId, Long userId) {
+        /**
+         * 若干种获取 Product 的方式
+         */
 //        Product product = getProductFromRemote(productId);
 //        Product product = getProductFromRemoteLoadBalanceWithCode(productId);
-        Product product = getProductFromRemoteLoadBalanceWithAnno(productId);
+//        Product product = getProductFromRemoteLoadBalanceWithAnno(productId);
+        Product product = productFeignClient.getProductById(productId);
 
         Order order = new Order();
 
