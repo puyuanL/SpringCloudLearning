@@ -1,0 +1,21 @@
+# Timeout Configuration
+spring:
+  cloud:
+    openfeign:
+      client:
+        config:
+          # 默认配置（没有精确配置时生效）
+          default:
+            logger-level: full
+            connect-timeout: 1000
+            read-timeout: 2000
+          # 某个 service 精确配置
+          service-product:
+            logger-level: full
+            connect-timeout: 1000
+            read-timeout: 5000      # 设置 5s 未读取，则超时
+#            request-interceptors:
+#              - order.interceptor.TokenRequestInterceptor
+feign:
+  sentinel:
+    enabled: true

@@ -5,6 +5,7 @@ server:
 spring:
   profiles:
     active: test
+    include: feign
   application:
     name: server-order
   cloud:
@@ -14,6 +15,11 @@ spring:
         namespace: ${spring.profiles.active:public}
         import-check:
           enabled: false
+
+# logger
+logging:
+  level:
+    order.feign: debug
 
 ---
 spring:
