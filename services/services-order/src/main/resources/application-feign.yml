@@ -16,6 +16,13 @@ spring:
             read-timeout: 5000      # 设置 5s 未读取，则超时
 #            request-interceptors:
 #              - order.interceptor.TokenRequestInterceptor
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+      eager: true
+
+
+
 feign:
   sentinel:
     enabled: true

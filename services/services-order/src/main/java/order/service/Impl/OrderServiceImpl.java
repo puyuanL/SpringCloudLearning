@@ -1,5 +1,6 @@
 package order.service.Impl;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import lombok.extern.slf4j.Slf4j;
 import order.bean.Order;
 import order.feign.ProductFeignClient;
@@ -30,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     ProductFeignClient productFeignClient;
 
+    @SentinelResource(value = "createOrder")
     @Override
     public Order createOrder(Long productId, Long userId) {
         /**
