@@ -1,6 +1,8 @@
 package order.service.Impl;
 
+import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import lombok.extern.slf4j.Slf4j;
 import order.bean.Order;
 import order.feign.ProductFeignClient;
@@ -31,7 +33,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     ProductFeignClient productFeignClient;
 
-    @SentinelResource(value = "createOrder")
+    // 将异常传递给createOrderFallback进行兜底回调，最终交给SpringBoot全局异常处理器处理
+    @SentinelResource(value = "createOrder", blockHandler = "createOrderFallback")
     @Override
     public Order createOrder(Long productId, Long userId) {
         /**
@@ -43,9 +46,7 @@ public class OrderServiceImpl implements OrderService {
         Product product = productFeignClient.getProductById(productId);
 
         Order order = new Order();
-
-        order.setId(1L);
-        order.setUserId(userId);
+        order.setId(userId);
         order.setAddress("NPU");
         // total amount
         product.getPrice().multiply(new BigDecimal(product.getNum()));
@@ -53,7 +54,31 @@ public class OrderServiceImpl implements OrderService {
         // product list
         order.setProductList(Arrays.asList(product));
 
+//        try {
+//            SphU.entry("hahaha");
+//            order.setAddress("NPU");
+//            // total amount
+//            product.getPrice().multiply(new BigDecimal(product.getNum()));
+//            order.setTotalAmount(new BigDecimal("999"));
+//            // product list
+//            order.setProductList(Arrays.asList(product));
+//        } catch (BlockException e) {
+//            // 编码处理
+//            throw new RuntimeException(e);
+//        }
+
         return order;
+    }
+
+    // Fallback 兜底回调
+    public Order createOrderFallback(Long productId, Long userId, BlockException e) {
+         Order order = new Order();
+         order.setId(userId);
+         order.setAddress("Error Message: " + e.getClass());
+         order.setNickName("unknow nick name");
+         order.setTotalAmount(new BigDecimal("0"));
+
+         return order;
     }
 
     // Way1

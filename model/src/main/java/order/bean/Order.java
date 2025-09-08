@@ -10,7 +10,6 @@ import java.util.List;
 public class Order {
     private Long id;
     private BigDecimal totalAmount;
-    private Long userId;
     private String nickName;
     private String address;
     private List<Product> productList;
