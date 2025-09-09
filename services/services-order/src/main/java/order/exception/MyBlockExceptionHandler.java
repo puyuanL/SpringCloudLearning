@@ -18,6 +18,7 @@ public class MyBlockExceptionHandler implements BlockExceptionHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        String resourceName, BlockException e) throws Exception {
+        response.setStatus(429);  // Too Many Request
         response.setContentType("application/json;charset=utf-8");
         PrintWriter writer = response.getWriter();
 
