@@ -46,7 +46,8 @@ public class OrderServiceImpl implements OrderService {
         Product product = productFeignClient.getProductById(productId);
 
         Order order = new Order();
-        order.setId(userId);
+        order.setId(1L);
+        order.setUserId(userId);
         order.setAddress("NPU");
         // total amount
         product.getPrice().multiply(new BigDecimal(product.getNum()));

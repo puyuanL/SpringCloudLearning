@@ -1,5 +1,7 @@
 package order.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import lombok.extern.slf4j.Slf4j;
 import order.bean.Order;
 import order.properties.OrderProperties;
@@ -42,10 +44,20 @@ public class OrderController {
     // 流控模式（链路）--秒杀订单模式
     // 通过设置流控规则，实现某一个路径下的流量限制
     @GetMapping("/seckill")
-    public Order seckill(@RequestParam("userId") Long userId,
-                         @RequestParam("productId") Long productId) {
-        Order order = orderService.createOrder(userId, productId);
+    @SentinelResource(value = "seckill-order", fallback = "seckillFallback")
+    public Order seckill(@RequestParam(value = "userId", required = false) Long userId,
+                         @RequestParam(value = "productId", defaultValue = "1000") Long productId) {
+        Order order = orderService.createOrder(productId, userId);
         order.setId(Long.MAX_VALUE);
+
+        return order;
+    }
+
+    public Order seckillFallback(Long userId, Long productId, BlockException exception) {
+        Order order = new Order();
+        order.setId(productId);
+        order.setUserId(userId);
+        order.setAddress("异常信息：" + exception.getClass());
 
         return order;
     }
