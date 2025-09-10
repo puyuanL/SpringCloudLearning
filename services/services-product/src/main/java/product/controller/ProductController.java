@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import product.bean.Product;
 import product.service.ProductService;
 
+import java.util.concurrent.TimeUnit;
+
 @RestController
 public class ProductController {
 
@@ -19,6 +21,12 @@ public class ProductController {
                               HttpServletRequest request) {
         String header = request.getHeader("X-token");
         System.out.println("Return product by this client. X-token: " + header);
+        int i = 10 / 0;
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return productService.getProductById(productId);
     }
 }
