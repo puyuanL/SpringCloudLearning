@@ -1,0 +1,37 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: bing-route
+          uri: https://cn.bing.com/
+          predicates:
+            - name: Path
+              args:
+                patterns: /search
+            # Query
+            - name: Query
+              args:
+                param: q
+                regexp: haha
+            # 自定义断言工厂
+            - Vip=user,lpy
+          order: 10
+          metadata:
+            hello: word
+        - id: order-route
+          uri: lb://service-order
+          predicates:
+            # 处理该路径下的所有请求
+            - Path=/api/order/**
+        - id: product-route
+          uri: lb://service-product
+          predicates:
+            - Path=/api/product/**
+#        # 断言的第二种写法
+#        - id: order-route
+#          uri: lb://service-order
+#          predicates:
+#            - name: Path
+#              args:
+#                patterns: /api/order/**
+#                matchTrailingSlash: true

@@ -8,10 +8,13 @@ import order.properties.OrderProperties;
 import order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
+// 表示所有请求均以 “/api/order” 开始
+@RequestMapping("/api/order")
 @Slf4j
 //@RefreshScope       // refresh automatically
 @RestController

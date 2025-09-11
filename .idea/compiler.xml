@@ -10,12 +10,14 @@
         <module name="services-product" />
         <module name="services-order" />
         <module name="model" />
+        <module name="gateway" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="SpringCloudLearning" options="" />
+      <module name="gateway" options="-parameters" />
       <module name="model" options="-parameters" />
       <module name="services" options="" />
       <module name="services-order" options="-parameters" />
