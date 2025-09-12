@@ -1,6 +1,12 @@
 spring:
   cloud:
     gateway:
+      globalcors:  # 全局跨域
+        cors-configurations:
+          '[/**]':
+            allowed-origin-patterns: '*'
+            allowed-headers: '*'
+            allowed-methods: '*'
       routes:
         - id: bing-route
           uri: https://cn.bing.com/
@@ -23,10 +29,16 @@ spring:
           predicates:
             # 处理该路径下的所有请求
             - Path=/api/order/**
+          filters:
+            - RewritePath=/api/order/?(?<segment>.*),/$\{segment}      # 路径重写 filter
+            - OnceToken=X-Response-Token, uuid
         - id: product-route
           uri: lb://service-product
           predicates:
             - Path=/api/product/**
+          filters:
+            - RewritePath=/api/product/?(?<segment>.*),/$\{segment}     # 路径重写 filter
+#            - AddResponseHeader=X-Response-Abc, 123                     # 添加请求头 filter
 #        # 断言的第二种写法
 #        - id: order-route
 #          uri: lb://service-order
@@ -35,3 +47,6 @@ spring:
 #              args:
 #                patterns: /api/order/**
 #                matchTrailingSlash: true
+
+      default-filters:    # 默认 filter
+        - AddResponseHeader=X-Response-Abc, 123                     # 添加请求头 filter

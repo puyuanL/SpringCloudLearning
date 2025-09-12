@@ -17,6 +17,6 @@ public interface ProductFeignClient {
      *  2. 标注在 FeignClient 上，表示发送这样的请求
      */
     //
-    @GetMapping("/api/product/product/{id}")
+    @GetMapping("/product/{id}")
     Product getProductById(@PathVariable("id") Long id);
 }
